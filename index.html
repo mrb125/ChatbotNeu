@@ -832,9 +832,8 @@ const LESSONS = [
         ],
         initialCode: `class Chatbot {
     public static void main(String[] args) {
-        String botName = "???"; // Gib deinem Bot einen Namen!
-        String begruessung = "";  // TODO: Begrüßung zusammenbauen
-        System.out.println(begruessung);
+        // TODO: Erstelle botName und begruessung und gib sie aus!
+
     }
 }`
     },
@@ -966,16 +965,10 @@ const LESSONS = [
     }
 
     static void chatbotAntwort(String frage) {
-        System.out.println("Du: " + frage);
-        String f = frage.toLowerCase(); // Groß/Klein egal!
-        String antwort;
+        // TODO: Erst .toLowerCase() aufrufen!
+        // Dann if-else mit .contains() für mindestens 4 Keywords.
+        // Vergiss den else-Fallback und die Ausgabe nicht!
 
-        // TODO: if-else mit .contains() für mindestens 4 Keywords
-        // Vergiss den else-Fallback nicht!
-        antwort = "???";
-
-        System.out.println("Bot: " + antwort);
-        System.out.println("---");
     }
 }`
     },
@@ -1064,7 +1057,6 @@ const LESSONS = [
     }
 
     static void loginCheck(String eingabe) {
-        String passwort = "Java2024!";
         // TODO: .equals() und .equalsIgnoreCase() nutzen
         // NIEMALS == für Strings!
 
@@ -1151,8 +1143,7 @@ const LESSONS = [
     }
 
     static void personalisiereAntwort(String name, String stadt, String hobby) {
-        String template = "Hallo [NAME]! In [STADT] gibt es sicher viele Fans von [HOBBY]. Schön dich kennenzulernen, [NAME]!";
-        // TODO: Alle drei Platzhalter mit .replace() ersetzen
+        // TODO: Alle drei Platzhalter [NAME], [STADT], [HOBBY] mit .replace() ersetzen
 
     }
 }`
@@ -1329,9 +1320,7 @@ for (...) {
     static void leetspeak(String text) {
         // TODO: Ersetze a/A->4, e/E->3, i/I->1, o/O->0
         // Hänge alles an einen neuen String an und gib ihn aus.
-        String neu = "";
-        
-        System.out.println(neu);
+
     }
 }`
     },
@@ -1381,17 +1370,10 @@ for (...) {
     }
 
     static void antworten(String frage) {
-        System.out.println("Du: " + frage);
-        String f = frage.toLowerCase().trim();
-        String antwort;
-
         // TODO: Implementiere deinen Chatbot!
         // Mindestens 5 Keywords (.contains), Namenserkennung (.indexOf + .substring),
         // Geheimbefehl (.equals), personalisierte Antworten (.replace)
-        antwort = "...";
 
-        System.out.println("Bot: " + antwort);
-        System.out.println("---");
     }
 }
 `
