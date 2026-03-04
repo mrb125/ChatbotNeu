@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ralphs Chatbot-Fabrik 🤖 | Java Strings EF NRW</title>
+  <meta name="description"
+    content="Interaktive Lernumgebung für Java-Strings im EF-Kurs NRW – programmiere deinen eigenen Chatbot mit Ralph!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+/* =========================================
+   RALPH'S CHATBOT-FABRIK
+   Von der Ralph Wiggum Methode inspiriert
+   Simpsons-Yellow meets modernes Design
+   ========================================= */
+
+/* === DESIGN TOKENS === */
+:root {
+    --yellow: #FFD100;
+    --yellow-dark: #E8BD00;
+    --yellow-light: #FFF8CC;
+    --orange: #F97316;
+    --orange-dark: #EA580C;
+    --blue: #2563EB;
+    --blue-light: #DBEAFE;
+    --green: #16A34A;
+    --green-light: #DCFCE7;
+    --red: #DC2626;
+    --purple: #7C3AED;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --bg: #FFFBEB;
+    --sidebar-bg: #FFFFFF;
+    --font: 'Nunito', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    --header-h: 64px;
+    --nav-h: 48px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.14);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --transition: all 0.2s ease;
+}
+
+/* === RESET === */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--gray-900);
+    display: flex;
+    flex-direction: column;
+}
+
+/* === HEADER === */
+.app-header {
+    height: var(--header-h);
+    background: var(--yellow);
+    border-bottom: 3px solid var(--yellow-dark);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 100;
+}
+
+.header-content {
+    width: 100%;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-emoji {
+    font-size: 2rem;
+    line-height: 1;
+    animation: bob 2.5s ease-in-out infinite;
+}
+
+@keyframes bob {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+.header-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--gray-900);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+}
+
+.header-subtitle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.55);
+    margin-top: 1px;
+}
+
+/* Progress */
+.progress-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 180px;
+}
+
+.progress-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+.progress-bar-track {
+    width: 180px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--orange);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* === LESSON TABS === */
+.lesson-tabs {
+    height: var(--nav-h);
+    background: var(--gray-900);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--yellow) transparent;
+    flex-shrink: 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.lesson-tabs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.lesson-tabs::-webkit-scrollbar-thumb {
+    background: var(--yellow);
+    border-radius: 2px;
+}
+
+.tab-btn {
+    height: 36px;
+    padding: 0 16px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tab-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.tab-btn.active {
+    background: var(--yellow);
+    color: var(--gray-900);
+}
+
+.tab-btn.completed::after {
+    content: '✓';
+    font-size: 0.7rem;
+    color: var(--green);
+}
+
+.tab-number {
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+.tab-btn.active .tab-number {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* === MAIN LAYOUT === */
+.app-main {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* === LESSON PANEL === */
+.lesson-panel {
+    background: var(--sidebar-bg);
+    border-right: 2px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 20px;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--yellow-dark) transparent;
+}
+
+.lesson-panel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.lesson-panel::-webkit-scrollbar-thumb {
+    background: var(--yellow-dark);
+    border-radius: 2px;
+}
+
+/* Lesson Header */
+.lesson-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--yellow-light);
+    padding-bottom: 12px;
+}
+
+.lesson-badge {
+    width: 44px;
+    height: 44px;
+    background: var(--yellow);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 3px 3px 0 var(--yellow-dark);
+    transition: var(--transition);
+}
+
+.lesson-title {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--gray-900);
+    line-height: 1.3;
+    transition: var(--transition);
+}
+
+.lesson-context {
+    font-size: 0.78rem;
+    color: var(--orange);
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* Ralph Tip */
+.ralph-tip {
+    background: linear-gradient(135deg, var(--yellow-light) 0%, #FFF3CD 100%);
+    border: 1.5px solid var(--yellow-dark);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    box-shadow: var(--shadow-sm);
+    animation: fadeSlideIn 0.4s ease;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ralph-tip-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+#ralphTipText {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    line-height: 1.5;
+    font-style: italic;
+}
+
+/* Content Cards */
+.content-card {
+    background: var(--gray-50);
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--gray-200);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    animation: fadeSlideIn 0.35s ease;
+    flex-shrink: 0;
+}
+
+.card-label {
+    padding: 8px 14px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid var(--gray-200);
+}
+
+.theory-card .card-label {
+    background: var(--blue-light);
+    color: var(--blue);
+    border-color: #BFDBFE;
+}
+
+.task-card .card-label {
+    background: var(--green-light);
+    color: var(--green);
+    border-color: #BBF7D0;
+}
+
+.content-card:nth-child(4) .card-label {
+    background: #EDE9FE;
+    color: var(--purple);
+    border-color: #DDD6FE;
+}
+
+.theory-body,
+.task-body,
+.code-exp-body {
+    padding: 14px;
+    font-size: 0.86rem;
+    line-height: 1.7;
+    color: var(--gray-700);
+}
+
+.theory-body code,
+.task-body code,
+.code-exp-body code {
+    font-family: var(--font-mono);
+    background: rgba(0, 0, 0, 0.06);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.82em;
+    color: var(--orange-dark);
+}
+
+.theory-body strong,
+.task-body strong {
+    color: var(--gray-900);
+    font-weight: 700;
+}
+
+.task-hints-container {
+    margin: 0 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hint-item {
+    padding: 10px 12px;
+    background: #FEF3C7;
+    border: 1.5px solid #FDE68A;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    color: #92400E;
+    line-height: 1.5;
+}
+
+.hint-item code {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 2px 4px;
+    border-radius: 4px;
+    color: #B45309;
+}
+
+.hint-item pre {
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(253, 230, 138, 0.5);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.solution-details summary {
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+}
+
+.hint-btn {
+    margin: 0 14px 14px;
+    padding: 7px 14px;
+    background: transparent;
+    border: 1.5px dashed var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: var(--font);
+    color: rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.hint-btn:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: #FFF7ED;
+}
+
+/* Lesson Nav */
+.lesson-nav {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+.nav-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    border: 2.5px solid var(--gray-900);
+    font-family: var(--font);
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 3px 3px 0 var(--gray-900);
+}
+
+.nav-btn:active {
+    box-shadow: none;
+    transform: translate(3px, 3px);
+}
+
+.nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.nav-btn-prev {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.nav-btn-prev:hover:not(:disabled) {
+    background: var(--gray-200);
+}
+
+.nav-btn-next {
+    background: var(--yellow);
+    color: var(--gray-900);
+}
+
+.nav-btn-next:hover:not(:disabled) {
+    background: var(--orange);
+    color: white;
+}
+
+
+/* === IDE PANEL === */
+.ide-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #1E1E1E;
+}
+
+.ide-header {
+    height: 40px;
+    background: #2D2D2D;
+    border-bottom: 1px solid #3D3D3D;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.ide-header-icon {
+    font-size: 1rem;
+}
+
+.ide-header-title {
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    flex: 1;
+}
+
+.ide-header-hint {
+    font-size: 0.72rem;
+    color: var(--yellow);
+    font-weight: 600;
+    background: rgba(255, 209, 0, 0.1);
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 209, 0, 0.2);
+}
+
+.ide-wrapper {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Ensures the online-ide div fills its container */
+.ide-wrapper .java-online {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* === SUCCESS MODAL === */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    border: 3px solid var(--yellow);
+    box-shadow: 8px 8px 0 var(--yellow-dark), var(--shadow-lg);
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-emoji {
+    font-size: 4rem;
+    margin-bottom: 12px;
+    animation: spinPop 0.6s ease;
+}
+
+@keyframes spinPop {
+    from {
+        transform: scale(0) rotate(-30deg);
+    }
+
+    to {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.modal-title {
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.modal-text {
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.modal-ralph {
+    font-style: italic;
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+}
+
+.modal-btn {
+    padding: 12px 28px;
+    background: var(--yellow);
+    border: 2.5px solid var(--gray-900);
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--gray-900);
+    transition: var(--transition);
+}
+
+.modal-btn:hover {
+    background: var(--orange);
+    color: white;
+}
+
+.modal-btn:active {
+    box-shadow: none;
+    transform: translate(3px, 3px);
+}
+
+/* === SCROLLBAR GLOBAL === */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gray-200);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--yellow-dark);
+}
+  </style>
+</head>
+
+<body>
+
+  <header class="app-header">
+    <div class="header-content">
+      <div class="header-brand">
+        <span class="header-emoji">🤖</span>
+        <div>
+          <h1 class="header-title">Ralphs Chatbot-Fabrik</h1>
+          <p class="header-subtitle">Java Strings · EF NRW · "Ich programmiere einen Chatbot!"</p>
+        </div>
+      </div>
+      <div class="progress-area">
+        <div class="progress-label">Fortschritt: <span id="progressText">0 / 0</span></div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="lesson-tabs" id="lessonTabs" role="tablist" aria-label="Lektionen"></nav>
+
+  <main class="app-main">
+
+    <section class="lesson-panel" aria-label="Lerninhalt">
+      <div class="lesson-header">
+        <div class="lesson-badge" id="lessonBadge">01</div>
+        <div>
+          <h2 class="lesson-title" id="lessonTitle">Lade...</h2>
+          <p class="lesson-context" id="lessonContext"></p>
+        </div>
+      </div>
+
+      <div class="ralph-tip" id="ralphTip">
+        <span class="ralph-tip-icon">💡</span>
+        <p id="ralphTipText">Ralph denkt nach...</p>
+      </div>
+
+      <div class="content-card theory-card">
+        <div class="card-label">📚 Theorie</div>
+        <div class="theory-body" id="theoryText"></div>
+      </div>
+
+      <div class="content-card code-explanation-card" id="codeExplanationCard" style="display:none;">
+        <div class="card-label">🔍 Was macht der Code?</div>
+        <div class="code-exp-body" id="codeExplanationText"></div>
+      </div>
+
+      <div class="content-card task-card">
+        <div class="card-label">✅ Deine Aufgabe</div>
+        <div class="task-body" id="taskText"></div>
+        <div class="task-hints-container" id="taskHintsContainer" style="display:none;"></div>
+        <button class="hint-btn" id="hintBtn" onclick="showNextHint()" style="display:none;">
+          💡 Tipp 1 anzeigen
+        </button>
+      </div>
+
+      <div class="lesson-nav">
+        <button class="nav-btn nav-btn-prev" id="prevBtn" onclick="prevLesson()" disabled>← Zurück</button>
+        <button class="nav-btn nav-btn-next" id="nextBtn" onclick="nextLesson()">Weiter →</button>
+      </div>
+    </section>
+
+    <section class="ide-panel" aria-label="Java Programmierumgebung">
+      <div class="ide-header">
+        <span class="ide-header-icon">⚙️</span>
+        <span class="ide-header-title">Java-Editor</span>
+        <span class="ide-header-hint">▶ Play zum Ausführen</span>
+      </div>
+      <div class="ide-wrapper"></div>
+    </section>
+
+  </main>
+
+  <div class="modal-overlay" id="successModal" style="display:none;" role="dialog" aria-modal="true" aria-label="Glückwunsch">
+    <div class="modal-card">
+      <div class="modal-emoji">🎉</div>
+      <h2 class="modal-title">Wahnsinn!</h2>
+      <p class="modal-text">Du hast alle Lektionen abgeschlossen!<br>Dein Chatbot <strong>RALPHO-3000</strong> ist fertig!</p>
+      <p class="modal-ralph">"Ich hab's selbst gemacht!" – Ralph</p>
+      <button class="modal-btn" onclick="restartApp()">Nochmal von vorne 🔁</button>
+    </div>
+  </div>
+
+  <script>
+// ================================================
+// RALPHS CHATBOT-FABRIK – App Logic
+// Ralph Wiggum Methode:
+//   ✅ Klare Ziele pro Lektion
+//   🔁 Schüler entwickeln Methoden selbst
+//   💡 Dreistufige Hilfe: Tipp 1 → Tipp 2 → Lösung
+//   🤖 Kontext: eigenen Chatbot bauen
+// ================================================
+
+const LESSONS = [
+    // ───────────────────────────── 01 ─────────────────────────────
+    {
+        id: "intro",
+        title: "Was ist ein String?",
+        badge: "01",
+        context: "Chatbot-Kontext: Gib deinem Chatbot einen Namen!",
+        ralphTip: '"Ein String ist wie ein Zettel mit Wörtern drauf. Ich hab auch einen Zettel, da steht \'Milch\'. Ich weiß nicht warum." – Ralph',
+        theory: `
+            In Java speichern wir Texte als <strong>String</strong>. Ein String steht immer in doppelten Anführungszeichen:<br><br>
+            <code>String name = "RALPHO-3000";</code><br><br>
+            Du kannst Strings <strong>zusammenfügen</strong> mit dem <code>+</code>-Operator:<br>
+            <code>String bot = "Ich bin " + name + "!";</code><br><br>
+            Genau so bekommt unser Chatbot später seine Antworten zusammengebaut!
+        `,
+        codeExplanation: `
+            <strong>Zeile 2:</strong> Wir speichern den Bot-Namen als String.<br>
+            <strong>Zeile 3:</strong> Wir bauen eine Begrüßung zusammen (+).<br>
+            <strong>Zeile 4:</strong> Wir geben alles in der Konsole aus.
+        `,
+        task: `Ändere den Code so, dass dein Chatbot <strong>deinen eigenen Namen</strong> begrüßt. Gib der Variable <code>botName</code> einen coolen Bot-Namen!`,
+        hints: [
+            "Schau dir Zeile 2 an – dort steht der Bot-Name in Anführungszeichen.",
+            "Ändere den Text zwischen den Anführungszeichen z.B. zu \"BOTINATOR-9000\".",
+            "// ✅ Lösung:\nString botName = \"BOTINATOR-9000\";\nString begruessung = \"Hallo! Ich bin \" + botName + \"!\";\nSystem.out.println(begruessung);"
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        String botName = "???"; // Gib deinem Bot einen Namen!
+        String begruessung = "";  // TODO: Begrüßung zusammenbauen
+        System.out.println(begruessung);
+    }
+}`
+    },
+
+    // ───────────────────────────── 02 ─────────────────────────────
+    {
+        id: "length",
+        title: "length() – Wie lang ist das?",
+        badge: "02",
+        context: "Chatbot-Kontext: Prüfen ob eine Nachricht zu kurz ist!",
+        ralphTip: '"Mein Finger ist ungefähr 5 Zeichen lang. Wenn man ihn aufschreibt. Ralph ist auch 5. Zufall?" – Ralph',
+        theory: `
+            Mit <strong><code>.length()</code></strong> zählt Java, wie viele Zeichen ein String hat:<br><br>
+            <code>String text = "Hallo";<br>int laenge = text.length(); // → 5</code><br><br>
+            Ein Chatbot nutzt das, um zu prüfen ob eine Frage lang genug ist:<br>
+            Ist die Frage kürzer als 3 Zeichen? → "Bitte stell eine richtige Frage!"
+        `,
+        codeExplanation: `
+            <strong>Zeile 3:</strong> Die Nutzereingabe als String.<br>
+            <strong>Zeile 4:</strong> <code>.length()</code> gibt die Zeichenanzahl zurück.<br>
+            <strong>Zeile 5+:</strong> If-Abfrage: Reagiert je nach Länge.
+        `,
+        task: `<strong>🔨 Selbst entwickeln:</strong> Schreibe die Methode <code>pruefeNachricht(String text)</code>, die:<br>
+        • Bei &lt; 3 Zeichen: <em>"Zu kurz!"</em> ausgibt<br>
+        • Bei &lt; 10 Zeichen: <em>"Kurz, aber OK."</em> ausgibt<br>
+        • Sonst: <em>"Gute Frage! (X Zeichen)"</em> ausgibt<br><br>
+        Teste mit <code>"Hi"</code>, <code>"Hallo"</code> und <code>"Was ist Informatik?"</code>`,
+        hints: [
+            "Erstelle eine static-Methode und hole zuerst die Länge: <code>int laenge = text.length();</code>",
+            "Nutze verschachtelte if-else: erst <code>if (laenge &lt; 3)</code>, dann <code>else if (laenge &lt; 10)</code>, dann <code>else</code>.",
+            '// ✅ Lösung:\nstatic void pruefeNachricht(String text) {\n    int laenge = text.length();\n    if (laenge < 3) {\n        System.out.println("Zu kurz!");\n    } else if (laenge < 10) {\n        System.out.println("Kurz, aber OK.");\n    } else {\n        System.out.println("Gute Frage! (" + laenge + " Zeichen)");\n    }\n}'
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        pruefeNachricht("Hi");
+        pruefeNachricht("Hallo");
+        pruefeNachricht("Was ist Informatik?");
+    }
+
+    // Schreibe hier deine Methode:
+    static void pruefeNachricht(String text) {
+        // TODO: text.length() nutzen + if-else
+
+    }
+}`
+    },
+
+    // ───────────────────────────── 03 ─────────────────────────────
+    {
+        id: "case",
+        title: "toUpperCase / toLowerCase",
+        badge: "03",
+        context: "Chatbot-Kontext: Groß/Kleinschreibung immer egal machen!",
+        ralphTip: '"ICH SCHREIBE MANCHMAL AUS VERSEHEN IN GROSSBUCHSTABEN. toLowerCase() würde mir helfen. Und vielleicht ein Keks." – Ralph',
+        theory: `
+            Ein Chatbot muss <strong>unabhängig von Groß/Kleinschreibung</strong> reagieren!<br><br>
+            <code>.toUpperCase()</code> → alles GROSS<br>
+            <code>.toLowerCase()</code> → alles klein<br><br>
+            <code>"Hallo".toUpperCase() // → "HALLO"</code><br>
+            <code>"WETTER".toLowerCase() // → "wetter"</code><br><br>
+            <strong>Trick:</strong> Immer zuerst toLowerCase(), dann vergleichen!
+        `,
+        codeExplanation: `
+            <strong>.toLowerCase():</strong> Gibt einen neuen String zurück – der Original bleibt unverändert!<br>
+            <strong>.trim():</strong> Entfernt Leerzeichen am Anfang und Ende.
+        `,
+        task: `<strong>🔨 Selbst entwickeln:</strong> Schreibe die Methode <code>normalisiere(String text)</code>, die:<br>
+        • Leerzeichen vorne/hinten entfernt (<code>.trim()</code>)<br>
+        • Alles in Kleinbuchstaben umwandelt (<code>.toLowerCase()</code>)<br>
+        • Ausgibt: <em>"Normalisiert: [ergebnis]"</em><br><br>
+        Teste mit: <code>"&nbsp;&nbsp;HALLO WELT&nbsp;&nbsp;"</code> und <code>"&nbsp;&nbsp;Schule IS COOL&nbsp;&nbsp;"</code>`,
+        hints: [
+            "<code>.trim()</code> entfernt Leerzeichen am Anfang/Ende: <code>String s = text.trim();</code>",
+            "Du kannst Methoden verketten: <code>text.trim().toLowerCase()</code> – erst trimmen, dann klein schreiben.",
+            '// ✅ Lösung:\nstatic void normalisiere(String text) {\n    String ergebnis = text.trim().toLowerCase();\n    System.out.println("Normalisiert: " + ergebnis);\n}'
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        normalisiere("  HALLO WELT  ");
+        normalisiere("  Schule IS COOL  ");
+        normalisiere("   Java Strings   ");
+    }
+
+    // Schreibe hier deine Methode:
+    static void normalisiere(String text) {
+        // TODO: .trim() und .toLowerCase() nutzen
+
+    }
+}`
+    },
+
+    // ───────────────────────────── 04 ─────────────────────────────
+    {
+        id: "contains",
+        title: "contains() – Keyword-Erkennung",
+        badge: "04",
+        context: "Chatbot-Kontext: Der Bot erkennt Schlüsselwörter!",
+        ralphTip: '"Wenn jemand \'Essen\' sagt, denke ich an Kekse. Das ist auch eine Art Keyword-Suche." – Ralph',
+        theory: `
+            Mit <strong><code>.contains("wort")</code></strong> prüft Java, ob ein String ein bestimmtes Wort enthält:<br><br>
+            <code>text.contains("Hilfe") // → true oder false</code><br><br>
+            Das ist das <strong>Herzstück eines Chatbots!</strong> Der Bot prüft Keywords und antwortet passend.<br><br>
+            Mit <code>||</code> kannst du mehrere Keywords prüfen:<br>
+            <code>if (f.contains("hallo") || f.contains("hi"))</code>
+        `,
+        codeExplanation: `
+            <strong>Zeile 4:</strong> Erst toLowerCase() – dann ist Groß/Klein egal.<br>
+            <strong>Zeile 5+:</strong> if-else prüft verschiedene Keywords.
+        `,
+        task: `<strong>🔨 Selbst entwickeln:</strong> Schreibe die Methode <code>chatbotAntwort(String frage)</code> mit mindestens <strong>4 Keywords</strong>:<br>
+        • "hallo" / "hi" → Begrüßung<br>
+        • "wetter" / "regen" → Wetterinfo<br>
+        • "hilfe" → Hilfenachricht<br>
+        • <strong>Eigenes Keyword erfinden!</strong><br>
+        • Fallback für unbekannte Fragen<br><br>
+        Wichtig: Erst <code>.toLowerCase()</code> aufrufen!`,
+        hints: [
+            "Wandle zuerst um: <code>String f = frage.toLowerCase();</code> – danach alle contains() auf <code>f</code> anwenden.",
+            "Nutze <code>||</code> für Synonyme: <code>if (f.contains(\"hallo\") || f.contains(\"hi\"))</code>",
+            '// ✅ Lösung (Beispiel):\nstatic void chatbotAntwort(String frage) {\n    System.out.println("Du: " + frage);\n    String f = frage.toLowerCase();\n    String antwort;\n    if (f.contains("hallo") || f.contains("hi")) {\n        antwort = "Hey! Ich bin RALPHO-3000!";\n    } else if (f.contains("wetter") || f.contains("regen")) {\n        antwort = "Es ist sonnig! ☀️ (glaube ich zumindest)";\n    } else if (f.contains("hilfe")) {\n        antwort = "Ich helfe dir gerne! Was brauchst du?";\n    } else if (f.contains("java")) {\n        antwort = "Java ist toll! Strings noch mehr.";\n    } else {\n        antwort = "Das weiß ich leider nicht.";\n    }\n    System.out.println("Bot: " + antwort);\n}'
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        chatbotAntwort("Hallo!");
+        chatbotAntwort("Wie wird das Wetter?");
+        chatbotAntwort("Ich brauche Hilfe");
+        chatbotAntwort("Magst du Java?");
+        chatbotAntwort("Blabla xyz");
+    }
+
+    static void chatbotAntwort(String frage) {
+        System.out.println("Du: " + frage);
+        String f = frage.toLowerCase(); // Groß/Klein egal!
+        String antwort;
+
+        // TODO: if-else mit .contains() für mindestens 4 Keywords
+        // Vergiss den else-Fallback nicht!
+        antwort = "???";
+
+        System.out.println("Bot: " + antwort);
+        System.out.println("---");
+    }
+}`
+    },
+
+    // ───────────────────────────── 05 ─────────────────────────────
+    {
+        id: "indexof",
+        title: "indexOf() & charAt()",
+        badge: "05",
+        context: "Chatbot-Kontext: Zeichen und Positionen im Text finden!",
+        ralphTip: '"indexOf findet Dinge. Ich finde auch Dinge. Meistens sind es verlorene Dinge. Manchmal meine eigenen Schuhe." – Ralph',
+        theory: `
+            <strong><code>.indexOf("x")</code></strong> gibt zurück, <em>wo</em> ein Text zum ersten Mal vorkommt (ab Index 0):<br>
+            <code>"Hallo".indexOf("l") // → 2</code><br>
+            Nicht gefunden → gibt <code>-1</code> zurück!<br><br>
+            <strong><code>.charAt(n)</code></strong> gibt das Zeichen an Position n:<br>
+            <code>"Hallo".charAt(0) // → 'H'</code><br><br>
+            <strong>Typischer Einsatz:</strong> Prüfen ob "@" in einer E-Mail vorkommt!
+        `,
+        codeExplanation: `
+            <strong>indexOf():</strong> Gibt -1 zurück, wenn das Gesuchte nicht vorhanden ist.<br>
+            <strong>charAt():</strong> Java zählt immer ab 0!
+        `,
+        task: `<strong>🔨 Selbst entwickeln:</strong> Schreibe die Methode <code>validiereEmail(String email)</code>:<br>
+        • Prüfe: Enthält sie "@"? (<code>indexOf("@") &gt; -1</code>)<br>
+        • Prüfe: Enthält sie "."? (<code>contains(".")</code>)<br>
+        • Gültig: ✅ "Gültig! @ ist an Position X"<br>
+        • Kein @: ❌ "Kein @-Zeichen!"<br>
+        • Kein Punkt: ❌ "Kein Punkt!"<br><br>
+        Teste: <code>"schueler@schule.de"</code>, <code>"keinAt"</code>, <code>"keinPunkt@test"</code>`,
+        hints: [
+            "Speichere den Index: <code>int atPos = email.indexOf(\"@\");</code> – dann prüfe ob <code>atPos == -1</code>",
+            "Kombiniere Bedingungen mit <code>&&</code>: <code>if (hatAt && hatPunkt)</code> – erst den Erfolgsfall, dann die Fehlerfälle.",
+            '// ✅ Lösung:\nstatic void validiereEmail(String email) {\n    int atPos = email.indexOf("@");\n    boolean hatAt = atPos > -1;\n    boolean hatPunkt = email.contains(".");\n    System.out.println("E-Mail: " + email);\n    if (hatAt && hatPunkt) {\n        System.out.println("✅ Gültig! @ ist an Position " + atPos);\n    } else if (!hatAt) {\n        System.out.println("❌ Kein @-Zeichen gefunden!");\n    } else {\n        System.out.println("❌ Kein Punkt gefunden!");\n    }\n}'
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        validiereEmail("schueler@schule.de");
+        validiereEmail("keinAt");
+        validiereEmail("keinPunkt@test");
+        validiereEmail("a.b@c.de");
+    }
+
+    static void validiereEmail(String email) {
+        // TODO: indexOf("@") und contains(".") nutzen
+        // Tipp: indexOf gibt -1 zurück wenn nicht gefunden!
+
+    }
+}`
+    },
+
+    // ───────────────────────────── 06 ─────────────────────────────
+    {
+        id: "equals",
+        title: "equals() – Strings vergleichen",
+        badge: "06",
+        context: "Chatbot-Kontext: Passwort-Check für deinen Bot!",
+        ralphTip: '"== fragt: Bist du ich? equals() fragt: Siehst du aus wie ich? Das ist ein wichtiger Unterschied. Ich glaube." – Ralph',
+        theory: `
+            <strong>❌ NIEMALS <code>==</code> für Strings!</strong> Das ist der häufigste Java-Anfängerfehler!<br><br>
+            ❌ <code>name == "Ralph"</code> → kann false sein, obwohl gleich!<br>
+            ✅ <code>name.equals("Ralph")</code> → immer korrekt<br>
+            ✅ <code>name.equalsIgnoreCase("ralph")</code> → Groß/Klein egal<br><br>
+            <strong>Warum?</strong> <code>==</code> vergleicht Speicheradressen, nicht den Inhalt!
+        `,
+        codeExplanation: `
+            <strong>.equals():</strong> Vergleicht exakten Inhalt, Groß/Klein beachtet.<br>
+            <strong>.equalsIgnoreCase():</strong> Inhalt egal, Groß/Klein egal.
+        `,
+        task: `<strong>🔨 Selbst entwickeln:</strong> Schreibe die Methode <code>loginCheck(String eingabe)</code>:<br>
+        • Korrekt (Passwort: <code>"Java2024!"</code>) → "✅ Zugang gewährt!"<br>
+        • Nur Groß/Klein falsch → "⚠️ Fast! Groß/Kleinschreibung beachten!"<br>
+        • Völlig falsch → "❌ Falsches Passwort."<br><br>
+        Teste: <code>"Java2024!"</code>, <code>"java2024!"</code>, <code>"geheim"</code>`,
+        hints: [
+            "Prüfe zuerst mit <code>.equals()</code> auf exakte Übereinstimmung.",
+            "Nutze dann <code>.equalsIgnoreCase()</code> in einem <code>else if</code>, um den \"Fast richtig\"-Fall zu erkennen.",
+            '// ✅ Lösung:\nstatic void loginCheck(String eingabe) {\n    String passwort = "Java2024!";\n    if (eingabe.equals(passwort)) {\n        System.out.println("✅ Zugang gewährt!");\n    } else if (eingabe.equalsIgnoreCase(passwort)) {\n        System.out.println("⚠️ Fast! Groß/Kleinschreibung beachten!");\n    } else {\n        System.out.println("❌ Falsches Passwort.");\n    }\n}'
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        loginCheck("Java2024!");  // Richtig
+        loginCheck("java2024!");  // Fast
+        loginCheck("JAVA2024!");  // Fast
+        loginCheck("geheim");     // Falsch
+    }
+
+    static void loginCheck(String eingabe) {
+        String passwort = "Java2024!";
+        // TODO: .equals() und .equalsIgnoreCase() nutzen
+        // NIEMALS == für Strings!
+
+    }
+}`
+    },
+
+    // ───────────────────────────── 07 ─────────────────────────────
+    {
+        id: "substring",
+        title: "substring() – Text zuschneiden",
+        badge: "07",
+        context: "Chatbot-Kontext: Namen aus Sätzen herausschneiden!",
+        ralphTip: '"Ein Substring ist wie ein Stück Kuchen, aber aus Wörtern. Ich nehme das Schokoladen-Substring." – Ralph',
+        theory: `
+            Mit <strong><code>.substring(start, ende)</code></strong> schneidest du einen Teil aus einem String:<br><br>
+            <strong>Wichtig:</strong> Java fängt bei <strong>Index 0</strong> an zu zählen!<br>
+            <code>"Hallo" → H=0, a=1, l=2, l=3, o=4</code><br><br>
+            <code>text.substring(0, 5)</code> → die ersten 5 Zeichen<br>
+            <code>text.substring(7)</code> → alles ab Index 7 bis Ende
+        `,
+        codeExplanation: `
+            <strong>Zeile 4:</strong> indexOf() findet wo "heiße " endet → dort fängt der Name an.<br>
+            <strong>Zeile 5:</strong> substring(index) schneidet alles ab dieser Stelle.
+        `,
+        task: `<strong>🔨 Selbst entwickeln:</strong> Schreibe die Methode <code>extrahiereNamen(String satz)</code>:<br>
+        • Eingabe: <code>"Ich heiße [Name]"</code><br>
+        • Nutze <code>indexOf("heiße")</code> + <code>substring()</code> um den Namen zu finden<br>
+        • Falls kein "heiße" vorhanden → "Kein Name gefunden."<br>
+        • Ausgabe: <em>"Gefundener Name: [Name]"</em><br><br>
+        Teste: <code>"Ich heiße Luisa"</code>, <code>"Ich heiße Max Mustermann"</code>, <code>"Hallo!"</code>`,
+        hints: [
+            "Finde die Position: <code>int idx = satz.indexOf(\"heiße\");</code> – prüfe danach ob <code>idx == -1</code>.",
+            "\"heiße \" (mit Leerzeichen) hat 7 Zeichen. Der Name beginnt bei: <code>idx + 7</code>. Also: <code>satz.substring(idx + 7)</code>",
+            '// ✅ Lösung:\nstatic void extrahiereNamen(String satz) {\n    int idx = satz.indexOf("heiße");\n    if (idx == -1) {\n        System.out.println("Kein Name gefunden.");\n        return;\n    }\n    String name = satz.substring(idx + 7); // "heiße " = 7 Zeichen\n    System.out.println("Gefundener Name: " + name);\n}'
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        extrahiereNamen("Ich heiße Luisa");
+        extrahiereNamen("Ich heiße Max Mustermann");
+        extrahiereNamen("Hallo!");
+    }
+
+    static void extrahiereNamen(String satz) {
+        // TODO: indexOf("heiße") und substring() kombinieren
+        // Tipp: "heiße " hat 7 Zeichen (inkl. Leerzeichen)
+
+    }
+}`
+    },
+
+    // ───────────────────────────── 08 ─────────────────────────────
+    {
+        id: "replace",
+        title: "replace() – Text ersetzen",
+        badge: "08",
+        context: "Chatbot-Kontext: Antwort-Templates personalisieren!",
+        ralphTip: '"Meine Lehrerin sagt, ich soll manche Wörter durch bessere ersetzen. Das macht replace(). Wir sind gleich." – Ralph',
+        theory: `
+            Mit <strong><code>.replace("alt", "neu")</code></strong> ersetzt Java alle Vorkommen eines Textes:<br><br>
+            <code>"Go go go".replace("go", "yo") // → "yo yo yo"</code><br><br>
+            Chatbots nutzen das für <strong>Antwort-Templates</strong>:<br>
+            <code>antwort.replace("[NAME]", nutzerName)</code><br><br>
+            Du kannst <code>.replace()</code> auch verketten:<br>
+            <code>text.replace("[A]", "1").replace("[B]", "2")</code>
+        `,
+        codeExplanation: `
+            <strong>replace():</strong> Ersetzt ALLE Vorkommen – wenn [NAME] zweimal steht, wird es zweimal ersetzt!
+        `,
+        task: `<strong>🔨 Selbst entwickeln:</strong> Schreibe die Methode <code>personalisiereAntwort(String name, String stadt, String hobby)</code>:<br>
+        • Template: <code>"Hallo [NAME]! In [STADT] gibt es sicher viele Fans von [HOBBY]. Schön dich kennenzulernen, [NAME]!"</code><br>
+        • Ersetze alle drei Platzhalter durch die Parameter<br>
+        • Beachte: [NAME] kommt zweimal vor → replace() ersetzt automatisch alle!`,
+        hints: [
+            "Weise das Template einer Variable zu: <code>String text = \"Hallo [NAME]! ...\";</code>",
+            "Wende replace() schrittweise an: <code>text = text.replace(\"[NAME]\", name);</code> – dann weiter mit [STADT] und [HOBBY].",
+            '// ✅ Lösung:\nstatic void personalisiereAntwort(String name, String stadt, String hobby) {\n    String antwort = "Hallo [NAME]! In [STADT] gibt es sicher viele Fans von [HOBBY]. Schön dich kennenzulernen, [NAME]!"\n        .replace("[NAME]", name)\n        .replace("[STADT]", stadt)\n        .replace("[HOBBY]", hobby);\n    System.out.println(antwort);\n}'
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        personalisiereAntwort("Luisa", "Köln", "Java-Programmieren");
+        personalisiereAntwort("Tim", "Berlin", "Fußball");
+        personalisiereAntwort("Mia", "Hamburg", "Musik");
+    }
+
+    static void personalisiereAntwort(String name, String stadt, String hobby) {
+        String template = "Hallo [NAME]! In [STADT] gibt es sicher viele Fans von [HOBBY]. Schön dich kennenzulernen, [NAME]!";
+        // TODO: Alle drei Platzhalter mit .replace() ersetzen
+
+    }
+}`
+    },
+
+    // ───────────────────────────── 09 ─────────────────────────────
+    {
+        id: "combinations",
+        title: "Methoden kombinieren",
+        badge: "09",
+        context: "Chatbot-Kontext: Ein lautes Kommando erkennen!",
+        ralphTip: '"Wenn ich ganz laut rede, hören mir alle zu. Manchmal kombiniere ich Schreien und Laufen. Methoden kann man auch kombinieren!" – Ralph',
+        theory: `
+            In Java kannst du mehrere <strong>String-Methoden hintereinander (verketten)</strong> oder nacheinander ausführen.<br><br>
+            Beispiel:<br>
+            <code>String wort = "   hallo   ".trim().toUpperCase(); // -> "HALLO"</code><br><br>
+            <strong>Das Ziel:</strong> Dein Chatbot soll erkennen, wenn jemand "SCHREIE: [Text]" eingibt. Er soll den Text danach extrahieren und in Großbuchstaben ausgeben.
+        `,
+        codeExplanation: `
+            Verwende <code>startsWith()</code> oder <code>indexOf()</code> um das Kommando zu finden.<br>
+            Benutze <code>substring()</code>, um den Text danach herauszuschnippeln.<br>
+            Veredle es mit <code>toUpperCase()</code>!
+        `,
+        task: `<strong>🔨 Selbst entwickeln: Kommando-Erkenner!</strong><br>
+        Schreibe die Methode <code>schreieKommando(String eingabe)</code>:<br>
+        1. Prüfe, ob die Eingabe mit <code>"SCHREIE: "</code> beginnt (Tipp: nutze <code>startsWith("SCHREIE: ")</code>).<br>
+        2. Wenn ja, schneide das Kommando ab (der Präfix hat 9 Zeichen).<br>
+        3. Mache den abgetrennten Rest komplett groß und gib ihn aus!<br>
+        4. Wenn nein, gib aus: "Kein Kommando erkannt."`,
+        hints: [
+            "Prüfe das Kommando: <code>if (eingabe.startsWith(\"SCHREIE: \")) { ... } else { ... }</code>",
+            "Schneide ab und mach es groß: <code>String text = eingabe.substring(9).toUpperCase(); System.out.println(text);</code>",
+            '// ✅ Lösung:\nstatic void schreieKommando(String eingabe) {\n    if (eingabe.startsWith("SCHREIE: ")) {\n        String text = eingabe.substring(9).toUpperCase();\n        System.out.println(text);\n    } else {\n        System.out.println("Kein Kommando erkannt.");\n    }\n}'
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        schreieKommando("SCHREIE: ich bin wach!");
+        schreieKommando("Hallo Ralph");
+        schreieKommando("SCHREIE: hallo welt");
+    }
+
+    static void schreieKommando(String eingabe) {
+        // TODO: Wenn eingabe mit "SCHREIE: " beginnt...
+        // ...schneide den Rest ab ("SCHREIE: " = 9 Zeichen)...
+        // ...mach ihn groß (toUpperCase) und gib ihn aus.
+        
+    }
+}`
+    },
+
+    // ───────────────────────────── 10 ─────────────────────────────
+    {
+        id: "forloop",
+        title: "for-Schleifen & Zeichen",
+        badge: "10",
+        context: "Chatbot-Kontext: Wie viele 'a's sind in der Nachricht?",
+        ralphTip: '"Ein Wort besteht aus vielen Buchstaben. Ich zähle sie an meinen Fingern, 1, 2, ... oh, schon alle." – Ralph',
+        theory: `
+            Um einen Text <strong>Zeichen für Zeichen</strong> zu durchsuchen, kombinieren wir <code>.length()</code>, <code>.charAt(i)</code> und eine <strong>for-Schleife</strong>:<br><br>
+            <pre><code>for (int i = 0; i < text.length(); i++) {
+    char c = text.charAt(i);
+    System.out.println(c);
+}</code></pre>
+            Damit kann ein Chatbot Buchstaben zählen, filtern oder umwandeln.
+        `,
+        codeExplanation: `
+            Eine Schleife geht von <code>i = 0</code> bis zum letzten Index <code>length() - 1</code>.<br>
+            <code>charAt(i)</code> holt das Zeichen an dieser Stelle. Als <code>char</code> kann man es mit <code>== 'a'</code> vergleichen (beachte die einfachen Anführungszeichen bei einzelnen Zeichen!).
+        `,
+        task: `<strong>🔨 Selbst entwickeln: Der 'a'-Zähler!</strong><br>
+        Schreibe die Methode <code>zaehleA(String text)</code>:<br>
+        1. Erstelle eine Zähl-Variable (<code>int count = 0;</code>).<br>
+        2. Gehe mit einer for-Schleife durch den gesamten Text.<br>
+        3. Prüfe, ob das aktuelle Zeichen ein kleines <code>'a'</code> ist. Wenn ja, zähle hoch.<br>
+        4. Gib am Ende die Anzahl aus: "Anzahl: X"`,
+        hints: [
+            "Die Schleife: <code>for (int i = 0; i < text.length(); i++) { ... }</code>",
+            "Im Inneren: <code>if (text.charAt(i) == 'a') { count++; }</code>",
+            "// ✅ Lösung:\nstatic void zaehleA(String text) {\n    int count = 0;\n    for (int i = 0; i < text.length(); i++) {\n        if (text.charAt(i) == 'a') {\n            count++;\n        }\n    }\n    System.out.println(\"Anzahl: \" + count);\n}"
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        zaehleA("Hallo Anna, wie gehts?");
+        zaehleA("Banana");
+        zaehleA("Keine kleinen a hier drinne");
+    }
+
+    static void zaehleA(String text) {
+        // TODO: Zähle wie oft das kleine 'a' im Text vorkommt.
+        // Nutze eine for-Schleife und text.charAt(i)
+        
+}`
+    },
+
+    // ───────────────────────────── 11 ─────────────────────────────
+    {
+        id: "forloop_reverse",
+        title: "Schleifen: Text umdrehen",
+        badge: "11",
+        context: "Chatbot-Kontext: Eine Geheimbotschaft rückwärts lesen!",
+        ralphTip: '"Wenn ich rückwärts laufe, laufe ich vorwärts, nur andersrum. Gilt das auch für Wörter? srawkcab?" – Ralph',
+        theory: `
+            Mit einer for-Schleife können wir nicht nur zählen, sondern auch einen <strong>neuen String zusammenbauen</strong>.<br><br>
+            Dazu starten wir mit einem <strong>Leeren String</strong> (<code>""</code>) und hängen in jedem Schleifendurchlauf Zeichen an.<br><br>
+            Entweder man lässt die Schleife <em>vorwärts</em> laufen und hängt das Zeichen <em>vorne</em> an den neuen String, oder man lässt die Schleife direkt gleich <em>rückwärts</em> laufen (<code>int i = text.length() - 1; i >= 0; i--</code>).
+        `,
+        codeExplanation: `
+            <pre><code>String neu = "";
+for (...) {
+    char c = text.charAt(i);
+    neu = neu + c; // oder: neu = c + neu;
+}</code></pre>
+        `,
+        task: `<strong>🔨 Selbst entwickeln: Rückwärts-Sprecher!</strong><br>
+        Schreibe die Methode <code>umdrehen(String text)</code>:<br>
+        1. Erstelle eine leere String-Variable (<code>String rueckwaerts = "";</code>).<br>
+        2. Gehe mit einer for-Schleife durch alle Zeichen des Textes.<br>
+        3. Füge jedes Zeichen so an den neuen String an, dass der Text am Ende umgedreht ist.<br>
+        4. Gib am Ende <code>rueckwaerts</code> aus!`,
+        hints: [
+            "Du hast zwei Wege: Schleife vorwärts und <code>rueckwaerts = c + rueckwaerts;</code> ODER Schleife rückwärts von <code>length()-1</code> bis <code>0</code>.",
+            "Schleife vorwärts: <code>for (int i = 0; i < text.length(); i++) { char c = text.charAt(i); rueckwaerts = c + rueckwaerts; }</code>",
+            "// ✅ Lösung (Vorwärts-Weg):\nstatic void umdrehen(String text) {\n    String rueckwaerts = \"\";\n    for (int i = 0; i < text.length(); i++) {\n        char c = text.charAt(i);\n        rueckwaerts = c + rueckwaerts;\n    }\n    System.out.println(rueckwaerts);\n}"
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        umdrehen("Hallo");
+        umdrehen("Lagerregal");
+        umdrehen("Das ist ein Test!");
+    }
+
+    static void umdrehen(String text) {
+        // TODO: Drehe den Text mit einer Schleife um 
+        // und speichere ihn in einer neuen Variable.
+        
+    }
+}`
+    },
+
+    // ───────────────────────────── 12 ─────────────────────────────
+    {
+        id: "forloop_leetspeak",
+        title: "Schleifen: Geheimsprache",
+        badge: "12",
+        context: "Chatbot-Kontext: Den Chatbot verschlüsselt sprechen lassen!",
+        ralphTip: '"Ich hab eine Geheimsprache. Wenn ich A sagen will, sag ich 4. Wenn ich O sagen will, sag ich null. Keiner versteht mich. 1ch b1n s0 schl4u!" – Ralph',
+        theory: `
+            Jetzt kommt die Königsdisziplin der for-Schleifen: <strong>Bedingtes Ersetzen!</strong><br><br>
+            Wir gehen wieder Zeichen für Zeichen durch den String und prüfen mit <code>if</code> / <code>else if</code> / <code>else</code>, um welches Zeichen es sich handelt, um es dann gezielt umzuwandeln oder so zu belassen, wie es ist.
+        `,
+        codeExplanation: `
+            Achtung: Einzelne Zeichen (char) vergleicht man mit dem <code>==</code> Operator und einfachen Anführungszeichen (z.B. <code>if (c == 'a')</code>).
+        `,
+        task: `<strong>🔨 Selbst entwickeln: Leetspeak-Generator!</strong><br>
+        Schreibe die Methode <code>leetspeak(String text)</code>:<br>
+        Baue eine Schleife, die einen neuen String Zeichen für Zeichen zusammensetzt:<br>
+        • Ist das Zeichen ein <code>'a'</code> oder <code>'A'</code>? Dann hänge ein <code>'4'</code> an den neuen String.<br>
+        • Ist es ein <code>'e'</code> oder <code>'E'</code>? Dann hänge eine <code>'3'</code> an.<br>
+        • Ist es ein <code>'i'</code> oder <code>'I'</code>? Dann hänge eine <code>'1'</code> an.<br>
+        • Ist es ein <code>'o'</code> oder <code>'O'</code>? Dann hänge eine <code>'0'</code> an.<br>
+        • Ansonsten: Hänge das ursprüngliche Zeichen an.<br>
+        Gib das Ergebnis aus!`,
+        hints: [
+            "Baue die Schleife: <code>String neu = \"\"; for (int i = 0; i < text.length(); i++) { char c = text.charAt(i); ... }</code>",
+            "Im Inneren: <code>if (c == 'a' || c == 'A') { neu += '4'; } else if (c == 'e' || c == 'E') { neu += '3'; } ... else { neu += c; }</code>",
+            "// ✅ Lösung:\nstatic void leetspeak(String text) {\n    String neu = \"\";\n    for (int i = 0; i < text.length(); i++) {\n        char c = text.charAt(i);\n        if (c == 'a' || c == 'A') {\n            neu += '4';\n        } else if (c == 'e' || c == 'E') {\n            neu += '3';\n        } else if (c == 'i' || c == 'I') {\n            neu += '1';\n        } else if (c == 'o' || c == 'O') {\n            neu += '0';\n        } else {\n            neu += c;\n        }\n    }\n    System.out.println(neu);\n}"
+        ],
+        initialCode: `class Chatbot {
+    public static void main(String[] args) {
+        leetspeak("Hallo wie geht es dir?");
+        leetspeak("GEHEIMSPRACHE aktivieren!");
+    }
+
+    static void leetspeak(String text) {
+        // TODO: Ersetze a/A->4, e/E->3, i/I->1, o/O->0
+        // Hänge alles an einen neuen String an und gib ihn aus.
+        String neu = "";
+        
+        System.out.println(neu);
+    }
+}`
+    },
+
+    // ───────────────────────────── 13 – FINAL ─────────────────────────────
+    {
+        id: "chatbot-final",
+        title: "🤖 Dein Chatbot!",
+        badge: "🏆",
+        context: "Alles zusammen: Dein eigener String-Chatbot!",
+        ralphTip: '"Ich hab einen Chatbot gebaut! Er sagt genau das, was ich sage, nur schneller. Wir sind beste Freunde." – Ralph',
+        theory: `
+            Jetzt kombinieren wir alles! Ein echter Chatbot:<br>
+            1️⃣ Nimmt die <strong>Eingabe</strong> als String<br>
+            2️⃣ Normalisiert: <code>.toLowerCase().trim()</code><br>
+            3️⃣ Prüft auf <strong>Keywords</strong> mit <code>.contains()</code><br>
+            4️⃣ Erkennt Namen mit <code>.indexOf()</code> + <code>.substring()</code><br>
+            5️⃣ Vergleicht Befehle mit <code>.equals()</code><br>
+            6️⃣ Personalisiert Antworten mit <code>.replace()</code><br><br>
+            <strong>Das ist echter Chatbot-Code!</strong> GPT macht im Kern dasselbe – nur mit Millionen Wörtern.
+        `,
+        task: `🏆 <strong>Abschlussprojekt – Dein eigener Chatbot!</strong><br><br>
+        Entwickle deinen eigenen Chatbot:
+        <ul style="margin:6px 0 0 16px; line-height:1.9">
+            <li>Mindestens <strong>5 verschiedene Keywords</strong></li>
+            <li>Mindestens <strong>3 verschiedene String-Methoden</strong></li>
+            <li><strong>Namenserkennung</strong> ("Ich heiße ...")</li>
+            <li>Ein <strong>Geheimbefehl</strong> (equals-Vergleich!)</li>
+            <li>Personalisierte Antworten mit <strong>[NAME]</strong></li>
+        </ul>
+        <br>Sei kreativ! 🚀`,
+        hints: [
+            "Starte mit <code>String f = frage.toLowerCase().trim();</code> um die Eingabe zu normalisieren.",
+            "Für Namenserkennung: <code>int idx = f.indexOf(\"heiße\"); if(idx > -1) nutzerName = frage.substring(idx + 7);</code>",
+            '// ✅ Starter-Lösung (ausbaubar):\nstatic String nutzerName = "Unbekannte/r";\n\nstatic void antworten(String frage) {\n    System.out.println("Du: " + frage);\n    String f = frage.toLowerCase().trim();\n    String antwort;\n\n    if (f.contains("heiße")) {\n        int idx = f.indexOf("heiße");\n        nutzerName = frage.substring(idx + 7);\n        antwort = "Schön, " + nutzerName + "! Ich bin RALPHO-3000.";\n    } else if (f.contains("hallo") || f.contains("hi")) {\n        antwort = "Hey " + nutzerName + "! 👋";\n    } else if (f.equals("geheim")) {\n        antwort = "🔐 Geheimbefehl aktiviert! RALPHO-MODUS AN!";\n    } else {\n        antwort = "Das weiß ich nicht.";\n    }\n    System.out.println("Bot: " + antwort + "\\n---");\n}'
+        ],
+        initialCode: `class MeinChatbot {
+
+    static String nutzerName = "Unbekannte/r";
+
+    public static void main(String[] args) {
+        antworten("Ich heiße Luisa");
+        antworten("Hallo!");
+        antworten("Was ist das Wetter?");
+        antworten("geheim");
+        antworten("Ich mag Java");
+    }
+
+    static void antworten(String frage) {
+        System.out.println("Du: " + frage);
+        String f = frage.toLowerCase().trim();
+        String antwort;
+
+        // TODO: Implementiere deinen Chatbot!
+        // Mindestens 5 Keywords (.contains), Namenserkennung (.indexOf + .substring),
+        // Geheimbefehl (.equals), personalisierte Antworten (.replace)
+        antwort = "...";
+
+        System.out.println("Bot: " + antwort);
+        System.out.println("---");
+    }
+}
+`
+    }
+];
+
+// ===== STATE =====
+let currentIndex = 0;
+const completed = new Set();
+
+// ===== HINT SYSTEM =====
+let currentHintLevel = 0; // 0=none, 1=Tipp1, 2=Tipp2, 3=Lösung
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+    buildTabs();
+    loadLesson(0);
+});
+
+// ===== TABS =====
+function buildTabs() {
+    const nav = document.getElementById('lessonTabs');
+    nav.innerHTML = '';
+    LESSONS.forEach((lesson, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn';
+        btn.role = 'tab';
+        btn.id = `tab-${i}`;
+        btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+        btn.onclick = () => loadLesson(i);
+        btn.innerHTML = `<span class="tab-number">${lesson.badge}</span>${lesson.title}`;
+        nav.appendChild(btn);
+    });
+}
+
+function updateTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === currentIndex);
+        tab.classList.toggle('completed', completed.has(i));
+        tab.setAttribute('aria-selected', i === currentIndex ? 'true' : 'false');
+    });
+}
+
+// ===== LOAD LESSON =====
+function loadLesson(index) {
+    if (index < 0 || index >= LESSONS.length) return;
+
+    if (index > currentIndex) completed.add(currentIndex);
+    currentIndex = index;
+    const lesson = LESSONS[index];
+
+    document.getElementById('lessonBadge').textContent = lesson.badge;
+    document.getElementById('lessonTitle').textContent = lesson.title;
+    document.getElementById('lessonContext').textContent = lesson.context;
+    document.getElementById('ralphTipText').textContent = lesson.ralphTip;
+    document.getElementById('theoryText').innerHTML = lesson.theory;
+
+    const expCard = document.getElementById('codeExplanationCard');
+    if (lesson.codeExplanation) {
+        expCard.style.display = 'block';
+        document.getElementById('codeExplanationText').innerHTML = lesson.codeExplanation;
+    } else {
+        expCard.style.display = 'none';
+    }
+
+    document.getElementById('taskText').innerHTML = lesson.task;
+
+    // Hints Reset
+    currentHintLevel = 0;
+    const hintContainer = document.getElementById('taskHintsContainer');
+    const hintBtn = document.getElementById('hintBtn');
+
+    hintContainer.style.display = 'none';
+    hintContainer.innerHTML = ''; // Clear old hints
+
+    if (lesson.hints && lesson.hints.length > 0) {
+        hintBtn.style.display = 'block';
+        hintBtn.textContent = '💡 Tipp 1 anzeigen';
+    } else {
+        hintBtn.style.display = 'none';
+    }
+
+    document.getElementById('prevBtn').disabled = index === 0;
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.textContent = index === LESSONS.length - 1 ? '🏁 Fertig!' : 'Weiter →';
+
+    updateProgress();
+    updateTabs();
+    setIDECode(lesson.initialCode);
+}
+
+// ===== HINT LOGIC =====
+function showNextHint() {
+    const lesson = LESSONS[currentIndex];
+    if (!lesson.hints || currentHintLevel >= lesson.hints.length) return;
+
+    const hintContainer = document.getElementById('taskHintsContainer');
+    hintContainer.style.display = 'block';
+
+    const hintEl = document.createElement('div');
+    hintEl.className = 'hint-item hint-level-' + currentHintLevel;
+
+    if (currentHintLevel === lesson.hints.length - 1) {
+        // Last hint is usually the solution, wrap in collapsible details
+        hintEl.innerHTML = `
+            <details class="solution-details">
+                <summary><strong>✅ Lösung einklappen/ausklappen</strong></summary>
+                <pre><code>${lesson.hints[currentHintLevel].replace(/\n/g, '<br>').replace('// ✅ Lösung:<br>', '')}</code></pre>
+            </details>
+        `;
+    } else {
+        hintEl.innerHTML = "<strong>💡 Tipp " + (currentHintLevel + 1) + ":</strong> " + lesson.hints[currentHintLevel];
+    }
+
+    // Add small animation
+    hintEl.style.opacity = '0';
+    hintEl.style.transform = 'translateY(-5px)';
+    hintEl.style.transition = 'all 0.3s ease';
+
+    hintContainer.appendChild(hintEl);
+
+    // Trigger reflow
+    void hintEl.offsetWidth;
+    hintEl.style.opacity = '1';
+    hintEl.style.transform = 'translateY(0)';
+
+    currentHintLevel++;
+
+    const hintBtn = document.getElementById('hintBtn');
+    if (currentHintLevel < lesson.hints.length - 1) {
+        hintBtn.textContent = '💡 Tipp ' + (currentHintLevel + 1) + ' anzeigen';
+    } else if (currentHintLevel === lesson.hints.length - 1) {
+        hintBtn.textContent = '�� Komplette Lösung anzeigen';
+    } else {
+        hintBtn.style.display = 'none';
+    }
+}
+
+// ===== IDE INTEGRATION =====
+let _ideCurrentCode = null;
+
+function setIDECode(code) {
+    if (code === _ideCurrentCode) return;
+    _ideCurrentCode = code;
+    rebuildIDE(code);
+}
+
+function rebuildIDE(code) {
+    const wrapper = document.querySelector('.ide-wrapper');
+    if (!wrapper) return;
+
+    wrapper.style.opacity = '0';
+    wrapper.style.transition = 'opacity 0.2s ease';
+
+    setTimeout(() => {
+        wrapper.innerHTML = '';
+
+        const ideId = 'chatbot_ef_' + Date.now();
+        const config = "{'id': '" + ideId + "', 'speed': 'max', " +
+            "'withBottomPanel': true, 'withFileList': true, 'withPCode': false, " +
+            "'withConsole': true, 'withErrorList': true, 'withClassDiagram': true}";
+
+        const iframe = document.createElement('iframe');
+        // CDN von learnj.de (Nutzung offiziell erlaubt, eigener Server mit großer Bandbreite)
+        iframe.setAttribute('srcdoc',
+            "<script>window.jo_doc = window.frameElement.textContent;<\/script>" +
+            "<script src='https://embed.learnj.de/include/js/includeide/includeIDE.js'><\/script>"
+        );
+        iframe.style.cssText = 'width:100%; height:100%; border:none; display:block;';
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('title', 'Java Programmierumgebung');
+
+        // Konfiguration + Code als textContent – wird von includeIDE.js via window.frameElement.textContent gelesen
+        iframe.appendChild(document.createTextNode(
+            config + '\n<script type="plain/text" title="Chatbot.java">\n' + code + '\n<\/script>'
+        ));
+
+        iframe.addEventListener('load', () => {
+            wrapper.style.opacity = '1';
+        });
+
+        wrapper.appendChild(iframe);
+    }, 100);
+}
+
+// ===== PROGRESS & NAV =====
+function updateProgress() {
+    const done = Math.max(completed.size, currentIndex === 0 ? 0 : 0);
+    const total = LESSONS.length;
+    const pct = Math.round((currentIndex / total) * 100);
+    document.getElementById('progressText').textContent = `${currentIndex + 1} / ${total}`;
+    document.getElementById('progressFill').style.width = `${pct}%`;
+}
+
+function nextLesson() {
+    if (currentIndex < LESSONS.length - 1) {
+        loadLesson(currentIndex + 1);
+    } else {
+        completed.add(currentIndex);
+        updateTabs();
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('progressText').textContent = `${LESSONS.length} / ${LESSONS.length}`;
+        document.getElementById('successModal').style.display = 'flex';
+    }
+}
+
+function prevLesson() {
+    if (currentIndex > 0) loadLesson(currentIndex - 1);
+}
+
+function restartApp() {
+    document.getElementById('successModal').style.display = 'none';
+    completed.clear();
+    loadLesson(0);
+}
+
+  </script>
+
+</body>
+</html>
